@@ -1,0 +1,54 @@
+# Modules
+import csv
+
+# Set path for file
+csvpath = "Resources/election_data.csv"
+
+# Variables
+vote_count = 0
+candi_dict = {}
+percentages = {}
+winner_candi = ""
+winner_votes = 0
+
+with open(csvpath, encoding= 'UTF-8') as csvfile:
+    csvreader = csv.reader(csvfile, delimiter=",")
+
+    csv_header = next(csvreader)
+    print(f"CSV Header: {csv_header}")
+
+    # total number of votes
+    for row in csvreader:
+        vote_count += 1
+        
+        # list of canidates
+        row_candi = row[2]
+        if row_candi in candi_dict.keys():
+            candi_dict[row_candi] += 1
+        else:
+            candi_dict[row_candi] = 1
+        
+print("Total number of votes cast: ", vote_count)
+print("List of candidates: ", candi_dict)
+
+# percentage of votes (asked Xpert)
+for candidate in candi_dict.keys():
+    votes = candi_dict[candidate]
+    percentage = (votes / vote_count) * 100
+    percentages[candidate] = percentage
+    print("Percentage the candidate won: ", f"{candidate}: {percentage:.3f}% ({votes})")
+    
+for candidate, percentage in percentages.items():
+    if percentage > winner_votes:
+        winner_votes = percentage
+        winner_candi = candidate
+print(f"Winner: {winner_candi} with {winner_votes:.3f}% of the votes")
+
+Results
+CSV Header: ['Ballot ID', 'County', 'Candidate']
+Total number of votes cast:  369711
+List of candidates:  {'Charles Casper Stockham': 85213, 'Diana DeGette': 272892, 'Raymon Anthony Doane': 11606}
+Percentage the candidate won:  Charles Casper Stockham: 23.049% (85213)
+Percentage the candidate won:  Diana DeGette: 73.812% (272892)
+Percentage the candidate won:  Raymon Anthony Doane: 3.139% (11606)
+Winner: Diana DeGette with 73.812% of the votes
